@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<psf2:PrintDeviceCapabilities
+	xmlns:psf="http://schemas.microsoft.com/windows/2003/08/printing/printschemaframework"
+	xmlns:psk="http://schemas.microsoft.com/windows/2003/08/printing/printschemakeywords"
+	xmlns:psf2="http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2"
+	xmlns:psk12="http://schemas.microsoft.com/windows/2013/12/printing/printschemakeywordsv12"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+	<psf2:CapabilitiesChangeID xsi:type="xs:string">{3C52912A-A97E-40CB-8196-94C5A952C9E6}</psf2:CapabilitiesChangeID>
+
+	<psk:PageMediaSize psf2:psftype="Feature">
+		<psk:ISOA4 psf2:psftype="Option" psf2:default="true">
+			<psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,210000,297000</psk12:PortraitImageableSize>
+			<psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xs:integer">210000</psk:MediaSizeWidth>
+			<psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xs:integer">297000</psk:MediaSizeHeight>
+		</psk:ISOA4>
+	</psk:PageMediaSize>
+	<psk:PageOrientation psf2:psftype="Feature">
+		<psk:Portrait psf2:psftype="Option" psf2:default="true"/>
+		<psk:Landscape psf2:psftype="Option"/>
+	</psk:PageOrientation>
+	<psk:PageResolution psf2:psftype="Feature">
+		<psf:Option psf2:psftype="Option" psf2:default="true">
+			<psk:DisplayName psf2:psftype="ScoredProperty" xsi:type="xs:string">600x600 dpi</psk:DisplayName>
+			<psk:ResolutionX psf2:psftype="ScoredProperty" xsi:type="xs:integer">600</psk:ResolutionX>
+			<psk:ResolutionY psf2:psftype="ScoredProperty" xsi:type="xs:integer">600</psk:ResolutionY>
+		</psf:Option>
+	</psk:PageResolution>
+
+	<psk:PageOutputColor psf2:psftype="Feature">
+		<psk:Color psf2:psftype="Option" psf2:default="true">
+			<psk:DeviceBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xs:integer">24</psk:DeviceBitsPerPixel>
+			<psk:DriverBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xs:integer">24</psk:DriverBitsPerPixel>
+		</psk:Color>
+		<psk:Grayscale psf2:psftype="Option">
+			<psk:DeviceBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xs:integer">8</psk:DeviceBitsPerPixel>
+			<psk:DriverBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xs:integer">8</psk:DriverBitsPerPixel>
+		</psk:Grayscale>
+		<psk:Monochrome psf2:psftype="Option">
+			<psk:DeviceBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xs:integer">1</psk:DeviceBitsPerPixel>
+			<psk:DriverBitsPerPixel psf2:psftype="ScoredProperty" xsi:type="xs:integer">1</psk:DriverBitsPerPixel>
+		</psk:Monochrome>
+	</psk:PageOutputColor>
+	<psk:JobDuplexAllDocumentsContiguously psf2:psftype="Feature">
+		<psk:OneSided psf2:psftype="Option" psf2:default="true"/>
+		<psk:TwoSidedLongEdge psf2:psftype="Option"/>
+		<psk:TwoSidedShortEdge psf2:psftype="Option"/>
+	</psk:JobDuplexAllDocumentsContiguously>
+</psf2:PrintDeviceCapabilities>

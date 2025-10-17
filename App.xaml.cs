@@ -1,77 +1,121 @@
 ﻿using Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
 using Windows.Graphics.Printing.PrintSupport;
 using Windows.Graphics.Printing.Workflow;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace PrintSupportApp1
+namespace VirtPrnApp
 {
-	public sealed partial class App : Application
+    /// <summary>
+    /// Provides application-specific behavior to supplement the default Application class.
+    /// </summary>
+    sealed partial class App : Application
     {
-		Deferral settingsDeferral;
-		public App()
+        /// <summary>
+        /// Initializes the singleton application object.  This is the first line of authored code
+        /// executed, and as such is the logical equivalent of main() or WinMain().
+        /// </summary>
+        public App()
         {
-			Tasks.Log.Add("App Constructed");
             this.InitializeComponent();
-		}
+            this.Suspending += OnSuspending;
+        }
+
 		protected override void OnActivated(IActivatedEventArgs args)
 		{
 			Tasks.Log.Add("App OnActivated with args.Kind=" + args.Kind.ToString());
-			switch(args.Kind)
+			switch (args.Kind)
 			{
 				case ActivationKind.PrintSupportSettingsUI:
 					{
 						var settingsEventArgs = args as PrintSupportSettingsActivatedEventArgs;
-						this.settingsDeferral = settingsEventArgs.GetDeferral();
-						PrintSupportSettingsUISession settingsSession = settingsEventArgs.Session;
-						Tasks.Log.Add("App OnActivated SettingsUI with settingsSession.LaunchKind=" + settingsSession.LaunchKind);
+						if (settingsEventArgs == null)
+						{
+							Tasks.Log.Add("Error: PrintSupportSettingsActivatedEventArgs is null.");
 
-						var rootFrame = new Frame();
-						rootFrame.Navigate(typeof(MainPage));
-						(rootFrame.Content as MainPage).InSettingsUI = true;
-						Window.Current.Content = rootFrame;
-						Window.Current.Activate();
+							return;
+						}
+						/*Crashes:
+						var settingsSession = settingsEventArgs.Session;
+						Tasks.Log.Add("App OnActivated SettingsUI with settingsSession.LaunchKind=" + settingsSession.LaunchKind);
+						*/
+						var settsUI = InitFrame(args.PreviousExecutionState);
+						if(settsUI != null)
+							settsUI.settingsDeferral = settingsEventArgs.GetDeferral();
 						break;
 					}
 				case ActivationKind.PrintSupportJobUI:
 					{
-						var rootFrame = new Frame();
-						rootFrame.Navigate(typeof(MainPage));//"possibly" make different page for JobUI
-						Window.Current.Content = rootFrame;
-
-						var workflowJobUIEventArgs = args as PrintWorkflowJobActivatedEventArgs;
-						PrintWorkflowJobUISession session = workflowJobUIEventArgs.Session;
-						Tasks.Log.Add("App OnActivated JobUI with session.Status=" + session.Status);
-
-						var jobUI = rootFrame.Content as MainPage;
-						session.PdlDataAvailable += jobUI.OnPdlDataAvailable;
-						session.JobNotification += jobUI.OnJobNotification;
-						session.Start();
-
-						Window.Current.Activate();
+						var settsUI = InitFrame(args.PreviousExecutionState);
+						if (null != settsUI)
+						{
+							var workflowSettingsUIEventArgs = args as PrintWorkflowJobActivatedEventArgs;
+							if (workflowSettingsUIEventArgs == null)
+							{
+								Tasks.Log.Add("Error: PrintWorkflowJobActivatedEventArgs is null.");
+								return;
+							}
+							var session = workflowSettingsUIEventArgs.Session;
+							session.PdlDataAvailable += settsUI.OnPdlDataAvailable;
+							session.JobNotification += settsUI.OnJobNotification;
+							session.VirtualPrinterUIDataAvailable += settsUI.VirtualPrinterUIDataAvailable;
+							session.Start();// Start firing events
+						}
 						break;
 					}
 			}
 		}
-		protected override void OnLaunched(LaunchActivatedEventArgs args)
-		{//not in docs but called when user clicks "Open printer ppp" in printer settings (maybe show About page)
+
+		private SettingsUI InitFrame(ApplicationExecutionState prevExecState)
+		{
+			SettingsUI ret = null;
+			var rootFrame = new Frame();
+			if (!rootFrame.Navigate(typeof(SettingsUI)))
+				Tasks.Log.Add("Error: Failed to navigate rootFrame to SettingsUI.");
+			else
+			{
+				ret = rootFrame.Content as SettingsUI;
+				if (null == ret)
+					Tasks.Log.Add("Error: rootFrame.Content SettingsUI is null after navigation.");
+				else
+				{
+					if (ApplicationExecutionState.Terminated == prevExecState)
+					{
+						//TODO: Load state from previously suspended application
+					}
+				}
+			}
+			Window.Current.Content = rootFrame;
+			Window.Current.Activate();
+			return ret;
+		}
+		/// <summary>
+		/// Invoked when the application is launched normally by the end user.  Other entry points
+		/// will be used such as when the application is launched to open a specific file.
+		/// </summary>
+		/// <param name="e">Details about the launch request and process.</param>
+		protected override void OnLaunched(LaunchActivatedEventArgs e)
+        {
 			Log.Add("App OnLaunched");
 			Frame rootFrame = Window.Current.Content as Frame;
 			if (rootFrame == null)
-			{
-				rootFrame = new Frame();
-				Window.Current.Content = rootFrame;
-			}
+				InitFrame(e.PreviousExecutionState);
+        }
 
-			rootFrame.Navigate(typeof(MainPage));
-			Window.Current.Activate();
-		}
-
-		internal void ExitSettings()
-		{
-			settingsDeferral.Complete();
-		}
-	}
+        /// <summary>
+        /// Invoked when application execution is being suspended.  Application state is saved
+        /// without knowing whether the application will be terminated or resumed with the contents
+        /// of memory still intact.
+        /// </summary>
+        /// <param name="sender">The source of the suspend request.</param>
+        /// <param name="e">Details about the suspend request.</param>
+        private void OnSuspending(object sender, SuspendingEventArgs e)
+        {
+            var deferral = e.SuspendingOperation.GetDeferral();
+            //TODO: Save application state and stop any background activity
+            deferral.Complete();
+        }
+    }
 }

@@ -1,29 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Package
-  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
-  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
-  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
-  xmlns:printsupport="http://schemas.microsoft.com/appx/manifest/printsupport/windows10"
-  IgnorableNamespaces="uap mp uap3 desktop4 printsupport">
+	xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+	xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+	xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+	xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+	xmlns:printsupport="http://schemas.microsoft.com/appx/manifest/printsupport/windows10"
+	xmlns:printsupport2="http://schemas.microsoft.com/appx/manifest/printsupport/windows10/2"
+	IgnorableNamespaces="mp uap desktop4 printsupport printsupport2">
 
 	<Identity
-	  Name="EPIP.PSA1.555FF5C3-23A7-4706-A288-F7EDF7433136"
-	  Publisher="CN=EPIP PTY LTD, O=EPIP PTY LTD, L=Sydney, S=New South Wales, C=AU"
-	  Version="1.0.2.0" />
+		Name="VirtIP.PSA.33A7B6C2-4874-4AB2-B0D8-3A97726590B7"
+		Publisher="CN=VirtIP PTY LTD, O=VirtIP PTY LTD, C=AU"
+		Version="1.0.12.0" />
+
+	<mp:PhoneIdentity PhoneProductId="C2F8CE2E-54DB-43D0-BA40-B561F44242E5" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
 	<Properties>
-		<DisplayName>PrintSupportApp1 Packaging.Package Display Name</DisplayName>
-		<PublisherDisplayName>EPIP Pty Ltd</PublisherDisplayName>
+		<DisplayName>VirtPrintSupport</DisplayName>
+		<PublisherDisplayName>VirtIP Pty Ltd</PublisherDisplayName>
 		<Logo>Assets\StoreLogo.png</Logo>
 	</Properties>
 
-	<mp:PhoneIdentity PhoneProductId="555FF5C3-23A7-4706-A288-F7EDF7433136" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
-
 	<Dependencies>
-		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26100.0" />
 	</Dependencies>
 
 	<Resources>
@@ -32,23 +32,32 @@
 
 	<Applications>
 		<Application Id="App"
-					 Executable="$targetnametoken$.exe"
-					 EntryPoint="PrintSupportApp1.App"
-					 desktop4:SupportsMultipleInstances="true">
+			Executable="$targetnametoken$.exe"
+			EntryPoint="VirtPrnApp.App"
+			desktop4:SupportsMultipleInstances="true">
 			<uap:VisualElements
-						DisplayName="PrintSupportApp1 Application.Display name"
-						Square150x150Logo="Assets\Square150x150Logo.png"
-						Square44x44Logo="Assets\Square44x44Logo.png"
-						Description="PrintSupportApp1 Application.Description"
-						BackgroundColor="transparent">
-				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" ShortName="PrintSupportApp1VisualAssets.ShortName"/>
+					DisplayName="VirtPrintSupportUI"
+					Square150x150Logo="Assets/Square150x150Logo.png"
+					Square44x44Logo="Assets/Square44x44Logo.png"
+					Description="VirtPrint supportting app UI"
+					BackgroundColor="transparent">
+				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
 				<uap:SplashScreen Image="Assets\SplashScreen.png" />
 			</uap:VisualElements>
 			<Extensions>
-				<printsupport:Extension Category="windows.printSupportSettingsUI" EntryPoint="PrintSupportApp1.App"/>
-				<printsupport:Extension Category="windows.printSupportJobUI" EntryPoint="PrintSupportApp1.App"/>
-				<printsupport:Extension Category="windows.printSupportWorkflow" EntryPoint="Tasks.PrnWorkflow"/>
-				<printsupport:Extension Category="windows.printSupportExtension" EntryPoint="Tasks.PrnExtension"/>
+				<printsupport2:Extension Category="windows.printSupportVirtualPrinterWorkflow" EntryPoint="Tasks.PrintBGTask">
+					<printsupport2:PrintSupportVirtualPrinter DisplayName="ms-resource:PrinterDisplayName"
+															  PrinterUri ="VirtIP:IPPVirtualPrinter"
+															  PreferredInputFormat="application/oxps"
+															  PdcFile="Assets/PRINTER_PDC.xml">
+						<printsupport2:SupportedFormats>
+							<printsupport2:SupportedFormat Type="application/pdf" MaxVersion="1.7" />
+							<printsupport2:SupportedFormat Type="application/oxps" />
+						</printsupport2:SupportedFormats>
+					</printsupport2:PrintSupportVirtualPrinter>
+				</printsupport2:Extension>
+				<printsupport:Extension Category="windows.printSupportSettingsUI" EntryPoint="VirtPrnApp.App"/>
+				<printsupport:Extension Category="windows.printSupportJobUI" EntryPoint="VirtPrnApp.App"/>
 			</Extensions>
 		</Application>
 	</Applications>
