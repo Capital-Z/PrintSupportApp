@@ -15,3 +15,6 @@ In Tasks project (reference from App regardless if used there):
 = The background task class must be public sealed and inherit from IBackgroundTask.  
 
 If you create a msix package and deploy it manually you might need to add your certificate to Trusted Root(?!) and Trusted People.
+
+Visual Studio can deploy it automatically, including installing the printer and debugging mostly works fine. Check "Unsistal and then re-install..." in App properties->Debug to ensure it works on next deploy.
+Error reporting is quite poor but the following locations might be helpful: Even Viewer: Microsoft-Windows-AppXDeploymentServer/Operational; Microsoft-Windows-BackgroundTaskInfrastructure/Operational; Microsoft-Windows-PrintService, also "C:\Windows\INF\setupapi.dev.log".
